@@ -33,7 +33,7 @@ public class AutomationConstant {
     public static List<MomoDTO> customerMomoQueue = new ArrayList<>();
     public static List<List> userIdMomo = new ArrayList<>();
 
-    private static List<String> userMomo1 = Arrays.asList("momo_auto1","Hcm@12345","false");
+    private static List<String> userMomo1 = Arrays.asList("auto_1","Hcm@12345","false");
 
     public static void initUser () {
         userId.add(user1);

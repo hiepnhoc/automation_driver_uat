@@ -4,6 +4,7 @@ import com.tpf.automation.tpf_automation.element.finnone.*;
 import com.tpf.automation.tpf_automation.entity.*;
 import com.tpf.automation.tpf_automation.entity.vin.MomoAddress;
 import com.tpf.automation.tpf_automation.entity.vin.MomoDTO;
+import com.tpf.automation.tpf_automation.entity.vin.MomoIncomeDto;
 import com.tpf.automation.tpf_automation.entity.vin.MomoReference;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
 import com.tpf.automation.tpf_automation.utils.Utils;
@@ -12,14 +13,17 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import javax.rmi.CORBA.Util;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.tpf.automation.tpf_automation.AutomationConstant.*;
+import static org.awaitility.Awaitility.await;
 
 public class MomoAutomationService {
-    public void runAutomation(MomoDTO momoDTO, String username, String password) throws InterruptedException {
+    public void runAutomation(MomoDTO momoDTO, String username, String password) throws InterruptedException, IOException {
 
         // FptLoanDetail fptLoanDetail = fptCustomer.getLoanDetail();
         //List<FptAddress> fptAddresses = fptCustomer.getAddresses();
@@ -298,14 +302,33 @@ public class MomoAutomationService {
         leadDetailsEmpDetailsWait.getAppInfo("EMPLOYMENT DETAILS", "Get app info").getText();
         System.out.println(username + " " + leadDetailsEmpDetailsWait.getAppInfo("EMPLOYMENT DETAILS", "Get app info").getText().trim());
         customerErrorResponse.setField1(leadDetailsEmpDetailsWait.getAppInfo("EMPLOYMENT DETAILS", "Get app info").getText());
-        leadDetailsEmpDetailsWait.getOccupationType_chzn("EMPLOYMENT DETAILS", "Salaried");
+        leadDetailsEmpDetailsWait.getOccupationType_chzn("EMPLOYMENT DETAILS", "Others");
         leadDetailsEmpDetailsWait.inputStaffMember("EMPLOYMENT DETAILS", empDetails);
-
-        //
 
         //endregion
         System.out.println(username + " EMPLOYMENT DETAILS DONE");
         Utils.captureScreenShot(driver);
+
+        //region FINANCE DETAIL
+        List<MomoIncomeDto> incomeDetailDTOList=new ArrayList<>();
+        MomoIncomeDto incomeDetailDTO=MomoIncomeDto.builder().incomeHead("Main Personal Income")
+                .frequency("Monthly")
+                .amount(String.valueOf(momoDTO.getData().getSalary()))
+                .percentage("100").build();
+        incomeDetailDTOList.add(incomeDetailDTO);
+
+        LeadDetailsEmpDetailsFinanceWait financialDetailsTab = new LeadDetailsEmpDetailsFinanceWait(driver);
+        financialDetailsTab.openIncomeDetailSection();
+        await("Load financial details - income details Section Timeout!").atMost(30, TimeUnit.SECONDS)
+                .until(() -> financialDetailsTab.getIncomeDetailDivElement().isDisplayed());
+        financialDetailsTab.setIncomeDetailsData(incomeDetailDTOList);
+        Utils.captureScreenShot(driver);
+//        financialDetailsTab.validInOutData(dataControl, applicationInfoValue.get("incomeDetails"));
+        financialDetailsTab.saveAndNext();
+
+        System.out.println(username + " EMPLOYMENT DETAILS : FINANCE DONE");
+        Utils.captureScreenShot(driver);
+        //end region
 
         /**
          * @param List<String> empDetails
@@ -353,6 +376,25 @@ public class MomoAutomationService {
         leadDetailsLoanDetailsWait.inputSourcing("LEAD DETAILS -> LOAN DETAILS", testLeadDetailsAppInfo);
         //endregion
         System.out.println(username + " LEAD DETAILS -> LOAN DETAILS DONE");
+        Utils.captureScreenShot(driver);
+
+        //regipn LEAD DETAILS -> VAP
+        if(momoDTO.getData().getInsurrance()==true)
+        {
+            LeadDetailsLoanDetailVapWait loanDetailsVapDetailsTab = new LeadDetailsLoanDetailVapWait(driver);
+
+            await("Load loan details - vap details container Timeout!").atMost(30, TimeUnit.SECONDS)
+                    .until(() -> loanDetailsVapDetailsTab.getTabVapDetailsElement().isDisplayed());
+            Utils.captureScreenShot(driver);
+            loanDetailsVapDetailsTab.getTabVapDetailsElement().click();
+            Utils.captureScreenShot(driver);
+            await("Load loan details - sourcing details container Timeout!").atMost(30, TimeUnit.SECONDS)
+                    .until(() -> loanDetailsVapDetailsTab.getVapDetailsDivContainerElement().isDisplayed());
+            Utils.captureScreenShot(driver);
+            loanDetailsVapDetailsTab.setData();
+            Utils.captureScreenShot(driver);
+            loanDetailsVapDetailsTab.getBtnSaveAndNextElement().click();
+        }
 
         /**
          * @param List<String> test_ref

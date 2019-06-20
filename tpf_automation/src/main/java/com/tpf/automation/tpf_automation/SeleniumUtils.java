@@ -190,6 +190,8 @@ public class SeleniumUtils {
             momoAutomationService.runAutomation(momoDTO, username, password);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }

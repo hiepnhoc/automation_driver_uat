@@ -42,6 +42,7 @@ public class LeadDetailsEmpDetailsWait {
     }
 
     public void inputStaffMember(String stage, List<String> test) {
+        getNatureOfOccupationType_chzn("EMPLOYMENT DETAILS", "Unemployed");
         //SeleniumUtils.findByID(driver,customerErrorResponse,"Text_employerName",stage ,test.get(0)).sendKeys(test.get(0));
 //        SeleniumUtils.sendKeys(SeleniumUtils.findByID(driver,customerErrorResponse,"Text_employerName",stage ,test.get(0)),
 //                test.get(0).trim());
