@@ -4,6 +4,7 @@ import com.tpf.automation.tpf_automation.AutomationConstant;
 import com.tpf.automation.tpf_automation.SeleniumUtils;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
 import com.tpf.automation.tpf_automation.rest.FptController;
+import com.tpf.automation.tpf_automation.rest.MomoController;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -46,19 +47,19 @@ public class QuitFPTWait {
         }
 
         //SeleniumUtils.findByID(driver,customerErrorResponse,"redirectToLoginButton",stage ,value);
-        for(int i = 0; i< AutomationConstant.userId.size(); i++) {
-            if(AutomationConstant.userId.get(i).get(0).equals(customerErrorResponse.getuserNameRunning())) {
-                AutomationConstant.userId.get(i).set(2,"false");
+        for(int i = 0; i< AutomationConstant.userIdMomo.size(); i++) {
+            if(AutomationConstant.userIdMomo.get(i).get(0).equals(customerErrorResponse.getuserNameRunning())) {
+                AutomationConstant.userIdMomo.get(i).set(2,"false");
             }
         }
         System.out.println("End thread " + customerErrorResponse.getuserNameRunning());
         //driver.close();
         driver.quit();
         System.out.println("Quit");
-        if(AutomationConstant.customerQueue.size() >= 1) {
-            FptController fptController = new FptController();
-            fptController.addData(AutomationConstant.customerQueue.get(0));
-            AutomationConstant.customerQueue.remove(0);
+        if(AutomationConstant.customerMomoQueue.size() >= 1) {
+            MomoController momoController = new MomoController();
+            momoController.addData(AutomationConstant.customerMomoQueue.get(0));
+            AutomationConstant.customerMomoQueue.remove(0);
         }
     }
 

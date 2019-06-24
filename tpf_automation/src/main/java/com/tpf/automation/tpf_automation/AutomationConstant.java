@@ -2,6 +2,7 @@ package com.tpf.automation.tpf_automation;
 
 import com.tpf.automation.tpf_automation.entity.FptCustomer;
 import com.tpf.automation.tpf_automation.entity.vin.MomoDTO;
+import com.tpf.automation.tpf_automation.entity.vin.MomoData;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,7 @@ public class AutomationConstant {
 //    private static List<String> user5 = Arrays.asList("auto_5","Hcm@12345","false");
 
     public static List<FptCustomer> customerQueue = new ArrayList<>();
-    public static List<MomoDTO> customerMomoQueue = new ArrayList<>();
+    public static List<MomoData> customerMomoQueue = new ArrayList<>();
     public static List<List> userIdMomo = new ArrayList<>();
 
     private static List<String> userMomo1 = Arrays.asList("auto_1","Hcm@12345","false");

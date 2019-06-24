@@ -1,19 +1,21 @@
 package com.tpf.automation.tpf_automation.services;
 
+import com.tpf.automation.tpf_automation.AutomationConstant;
 import com.tpf.automation.tpf_automation.element.finnone.*;
 import com.tpf.automation.tpf_automation.entity.*;
-import com.tpf.automation.tpf_automation.entity.vin.MomoAddress;
-import com.tpf.automation.tpf_automation.entity.vin.MomoDTO;
-import com.tpf.automation.tpf_automation.entity.vin.MomoIncomeDto;
-import com.tpf.automation.tpf_automation.entity.vin.MomoReference;
+import com.tpf.automation.tpf_automation.entity.vin.*;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
 import com.tpf.automation.tpf_automation.utils.Utils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import javax.rmi.CORBA.Util;
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,29 +25,71 @@ import static com.tpf.automation.tpf_automation.AutomationConstant.*;
 import static org.awaitility.Awaitility.await;
 
 public class MomoAutomationService {
-    public void runAutomation(MomoDTO momoDTO, String username, String password) throws InterruptedException, IOException {
+    private WebDriver driver;
+    private String browser;
+    private String baseUrl;
+    private String os;
+    private String hub;
+
+    public void runAutomation(MomoData momoDTO, String username, String password) throws InterruptedException, IOException {
 
         // FptLoanDetail fptLoanDetail = fptCustomer.getLoanDetail();
         //List<FptAddress> fptAddresses = fptCustomer.getAddresses();
         //List<FptProductDetail> fptProductDetails = fptCustomer.getProductDetails();
         //List<FptReference> fptReferences = fptCustomer.getReferences();
 
-        //region OPEN WEB BROWSER
-        System.setProperty(driverProperty, driverPath);
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("headless");
-
-
-        //options.addArguments("window-size=700x1000");
-        options.addArguments(driverWindowSizeFpt);
-        WebDriver driver = new ChromeDriver(options);
+//        //region OPEN WEB BROWSER
+//        System.setProperty(driverProperty, driverPath);
+//        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("headless");
+//
+//
+//        //options.addArguments("window-size=700x1000");
+//        options.addArguments(driverWindowSizeFpt);
+//        WebDriver driver = new ChromeDriver(options);
         CustomerErrorResponse customerErrorResponse = new CustomerErrorResponse();
         customerErrorResponse.setuserNameRunning(username);
-        customerErrorResponse.setField0(momoDTO.getData().getMomoLoanId().toString());
+        customerErrorResponse.setField0(momoDTO.getMomoLoanId());
         customerErrorResponse.setField1("UNKNOWN");
         customerErrorResponse.setField3(username);
+//
+//        driver.get(finnOneUAT);
 
-        driver.get(finnOneUAT);
+        //register hub
+        //String host = "10.10.10.10";
+        String host = "localhost";
+
+        this.browser = "chrome";
+        this.os = os;
+        this.baseUrl = baseUrl;
+        this.hub = hub;
+
+//        Platform platform = Platform.fromString(os.toUpperCase());
+        if (browser.equalsIgnoreCase("chrome")) {
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.addArguments("headless");
+            chromeOptions.addArguments("--incognito");
+//            chromeOptions.addArguments("start-maximized");
+            chromeOptions.addArguments("window-size=1800x3000");
+//            chromeOptions.setCapability("platform", platform);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), chromeOptions);
+        } else if (browser.equalsIgnoreCase("firefox")) {
+            FirefoxOptions firefoxOptions = new FirefoxOptions();
+//            firefoxOptions.setCapability("platform", platform);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), firefoxOptions);
+        } else {
+            InternetExplorerOptions ieOption = new InternetExplorerOptions();
+//            ieOption.setCapability("platform", platform);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), ieOption);
+        }
+        this.driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+//        this.driver.manage().window().maximize();
+
+//        this.driver.manage().window().setSize(new Dimension(2560, 1440));
+//        this.driver.manage().window().maximize();
+        this.driver.get(finnOneUAT);
+
+        //end register hub
 
 
         //driver.manage().window().maximize();
@@ -87,13 +131,13 @@ public class MomoAutomationService {
         //region BASIC INFORMATION
         //List<String> basicInformation = Arrays.asList("Female","MAI","THÀNH","NAM","22/05/1995","HÀ NỘI","Married","Highschool");
         //System.out.println("Quang: " + fptCustomer.getIssuePlace());
-        List<String> basicInformation = Arrays.asList(momoDTO.getData().getGender(),
-                momoDTO.getData().getFirstName(),
-                momoDTO.getData().getLastName(),
-                momoDTO.getData().getMiddleName(),
-                momoDTO.getData().getDateOfBirth(),
-                momoDTO.getData().getIssuePlace(),
-                momoDTO.getData().getMaritalStatus(), "Highschool");
+        List<String> basicInformation = Arrays.asList(momoDTO.getGender(),
+                momoDTO.getFirstName(),
+                momoDTO.getLastName(),
+                momoDTO.getMiddleName(),
+                momoDTO.getDateOfBirth(),
+                momoDTO.getIssuePlace(),
+                momoDTO.getMaritalStatus(), "Highschool");
         Utils.captureScreenShot(driver);
         LeadDetailsAppInfoWait leadDetailsAppInfoWait = new LeadDetailsAppInfoWait(driver, customerErrorResponse);
         leadDetailsAppInfoWait.getSelectBoxGender("LEAD_DETAILS__APPLICANT_INFORMATION__PERSONAL_INFORMATION", "Click drop box").click();
@@ -133,7 +177,7 @@ public class MomoAutomationService {
         List<String> c = Arrays.asList("Family Book Number","0","","Vietnam");
         List<String> d = Arrays.asList("Spouse Current National ID","123456789","","Vietnam");*/
 
-        List<String> a = Arrays.asList("Current National ID", momoDTO.getData().getPersonalId(), momoDTO.getData().getIssueDate(), "Vietnam");
+        List<String> a = Arrays.asList("Current National ID", momoDTO.getPersonalId(), momoDTO.getIssueDate(), "Vietnam");
         //List<String> b = Arrays.asList("Insurance Number",momoDTO.getData().getEmployeeCard(),"","Vietnam");
         //List<String> c = Arrays.asList("Family Book Number","0","","Vietnam");
         List<String> d = new ArrayList<>();
@@ -142,7 +186,7 @@ public class MomoAutomationService {
         identification.add(a);
         //identification.add(b);
         //identification.add(c);
-        for (MomoReference momoReference : momoDTO.getData().getReferences()
+        for (MomoReference momoReference : momoDTO.getReferences()
         ) {
             if (momoReference.getRelation().equals("Spouse")) {
                 d = Arrays.asList("Spouse Current National ID", momoReference.getPersonalId(), "", "Vietnam");
@@ -189,39 +233,39 @@ public class MomoAutomationService {
         MomoAddress momoAddress = MomoAddress.builder().addressType("Current Address")
                 .country("Vietnam")
                 .region("ALL")
-                .province(momoDTO.getData().getCity())
-                .district(momoDTO.getData().getDistrict())
-                .address1(momoDTO.getData().getAddress1())
-                .address2(momoDTO.getData().getAddress2())
-                .ward(momoDTO.getData().getWard())
+                .province(momoDTO.getCity())
+                .district(momoDTO.getDistrict())
+                .address1(momoDTO.getAddress1())
+                .address2(momoDTO.getAddress2())
+                .ward(momoDTO.getWard())
                 .build();
 
 
         a1 = Arrays.asList(momoAddress.getAddressType(), "Vietnam", "ALL"//fptaddress.getRegion()
                 , momoAddress.getProvince(), momoAddress.getDistrict(),
                 momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "1",
-                "1", "", "", momoDTO.getData().getPhoneNumber().replace("+84", "0"));
+                "1", "", "", momoDTO.getPhoneNumber().replace("+84", "0"));
         address.add(a1);
 
 
         b1 = Arrays.asList("Family Book Address", "Vietnam", "ALL"//fptaddress.getRegion()
                 , momoAddress.getProvince(), momoAddress.getDistrict(),
                 momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "1",
-                "1", "", "", momoDTO.getData().getPhoneNumber().replace("+84", "0"));
+                "1", "", "", momoDTO.getPhoneNumber().replace("+84", "0"));
         address.add(b1);
 
 
         c1 = Arrays.asList("Spouse Address", "Vietnam", "ALL"//fptaddress.getRegion()
                 , momoAddress.getProvince(), momoAddress.getDistrict(),
                 momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "1",
-                "1", "", "", momoDTO.getData().getPhoneNumber().replace("+84", "0"));
+                "1", "", "", momoDTO.getPhoneNumber().replace("+84", "0"));
         address.add(c1);
 
 
         d1 = Arrays.asList("Working Address", "Vietnam", "ALL"//fptaddress.getRegion()
                 , momoAddress.getProvince(), momoAddress.getDistrict(),
                 momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "1",
-                "1", "", "", momoDTO.getData().getPhoneNumber().replace("+84", "0"));
+                "1", "", "", momoDTO.getPhoneNumber().replace("+84", "0"));
         address.add(d1);
 
         leadDetailsAppInfoWait.getExpandAddress("ADDRESS INFORMATION", "CLICK TO INPUT ADDRESS").click();
@@ -243,11 +287,11 @@ public class MomoAutomationService {
          */
         //region FAMILY INFORMATION
         //check status marial moi insert
-        if (momoDTO.getData().getMaritalStatus().equals("Married")) {
+        if (momoDTO.getMaritalStatus().equals("Married")) {
             List<List> family = new ArrayList<>();
             //List<String> a3 = Arrays.asList("NGUYỄN VĂN QUÂN","Spouse","0829403521","","");
             List<String> a3 = new ArrayList<>();
-            for (MomoReference momoReference : momoDTO.getData().getReferences()
+            for (MomoReference momoReference : momoDTO.getReferences()
             ) {
                 if (momoReference.getRelation().equals("Spouse")) {
                     //System.out.println(fptReference.getRelation().equals("Spouse"));
@@ -313,7 +357,7 @@ public class MomoAutomationService {
         List<MomoIncomeDto> incomeDetailDTOList=new ArrayList<>();
         MomoIncomeDto incomeDetailDTO=MomoIncomeDto.builder().incomeHead("Main Personal Income")
                 .frequency("Monthly")
-                .amount(String.valueOf(momoDTO.getData().getSalary()))
+                .amount(String.valueOf(momoDTO.getSalary()))
                 .percentage("100").build();
         incomeDetailDTOList.add(incomeDetailDTO);
 
@@ -367,10 +411,10 @@ public class MomoAutomationService {
         //region LEAD DETAILS -> LOAN DETAILS
         List<String> testLeadDetailsAppInfo = new ArrayList<>();
         //testLeadDetailsAppInfo = Arrays.asList("FPT","FPT","2135","New Application","CDL_CASH","CD02_SAMSUNG","17242500","12","OTHER VALUE");
-        String appFormNumber = momoDTO.getData().getMomoLoanId().toString();
-        System.out.println("Loan Amount: " + momoDTO.getData().getAmount());
-        System.out.println("Tenor : " + momoDTO.getData().getLoanTime());
-        testLeadDetailsAppInfo = Arrays.asList("FPT", "MOMO", appFormNumber, "New Application", "DGL_CASH", "DG01_MOMO TRIAL", momoDTO.getData().getAmount().toString(), momoDTO.getData().getLoanTime().toString(), "OTHER VALUE");
+        String appFormNumber = momoDTO.getMomoLoanId().toString();
+        System.out.println("Loan Amount: " + momoDTO.getAmount());
+        System.out.println("Tenor : " + momoDTO.getLoanTime());
+        testLeadDetailsAppInfo = Arrays.asList("FPT", "MOMO", appFormNumber, "New Application", "DGL_CASH", "DG01_MOMO TRIAL", momoDTO.getAmount().toString(), momoDTO.getLoanTime().toString(), "OTHER VALUE");
         leadDetailsAppInfoWait.btnLoanDetails("LEAD DETAILS", "LOAN DETAILS");
         LeadDetailsLoanDetailsWait leadDetailsLoanDetailsWait = new LeadDetailsLoanDetailsWait(driver, customerErrorResponse);
         leadDetailsLoanDetailsWait.inputSourcing("LEAD DETAILS -> LOAN DETAILS", testLeadDetailsAppInfo);
@@ -379,7 +423,7 @@ public class MomoAutomationService {
         Utils.captureScreenShot(driver);
 
         //regipn LEAD DETAILS -> VAP
-        if(momoDTO.getData().getInsurrance()==true)
+        if(momoDTO.getInsurrance()==true)
         {
             LeadDetailsLoanDetailVapWait loanDetailsVapDetailsTab = new LeadDetailsLoanDetailVapWait(driver);
 
@@ -407,7 +451,7 @@ public class MomoAutomationService {
         List<List> test_ref = new ArrayList<>();
         //List<String> a6 = Arrays.asList("BÙI VĂN VỆ","Relative","373298133");
         //List<String> b6 = Arrays.asList("HOÀNG THỊ TỐ NGA","Colleague","335990151");
-        for (MomoReference momoReference : momoDTO.getData().getReferences()
+        for (MomoReference momoReference : momoDTO.getReferences()
         ) {
             if (!momoReference.getRelation().equals("Spouse")) {
                 test_ref.add(Arrays.asList(momoReference.getFullName(), momoReference.getRelation(), momoReference.getPhoneNumber()));
@@ -448,17 +492,17 @@ public class MomoAutomationService {
         //endregion LOAN CREATION
 
 
-        //QuitFPTWait quitFPTWait = new QuitFPTWait(driver,customerErrorResponse);
-        //quitFPTWait.QuitFinnOne("QUIT FINNONE", "QUIT FINNONE");
+//        QuitFPTWait quitFPTWait = new QuitFPTWait(driver,customerErrorResponse);
+//        quitFPTWait.QuitFinnOne("QUIT FINNONE", "QUIT FINNONE");
 
 
         //region FLAG END THREAD
-//        for(int i = 0; i< AutomationConstant.userId.size(); i++) {
-//            if(AutomationConstant.userId.get(i).get(0).equals(username)) {
-//                AutomationConstant.userId.get(i).set(2,"false");
-//            }
-//        }
-//        System.out.println("End thread " + AutomationConstant.userId);
+        for(int i = 0; i< AutomationConstant.userIdMomo.size(); i++) {
+            if(AutomationConstant.userIdMomo.get(i).get(0).equals(username)) {
+                AutomationConstant.userIdMomo.get(i).set(2,"false");
+            }
+        }
+        System.out.println("End thread " + AutomationConstant.userIdMomo);
         //endregion
 
 

@@ -1,9 +1,11 @@
 package com.tpf.automation.tpf_automation.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tpf.automation.tpf_automation.AutomationConstant;
 import com.tpf.automation.tpf_automation.SeleniumUtils;
 import com.tpf.automation.tpf_automation.entity.FptCustomer;
 import com.tpf.automation.tpf_automation.entity.vin.MomoDTO;
+import com.tpf.automation.tpf_automation.entity.vin.MomoData;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,14 +19,15 @@ import java.util.concurrent.Executors;
 public class MomoController {
 
     @PostMapping("/customers")
-    public MomoDTO addCustomer(@RequestBody MomoDTO momoDTO) throws Exception{
+    public MomoData addCustomer(@RequestBody MomoData momoDTO) throws Exception{
+        System.out.println(new ObjectMapper().writeValueAsString(momoDTO));
 
         addData(momoDTO);
 
         return momoDTO;
     }
 
-    public void addData(MomoDTO customer) {
+    public void addData(MomoData customer) {
         //translate(customer);
         String [] username = {null};
         String [] password = {null};

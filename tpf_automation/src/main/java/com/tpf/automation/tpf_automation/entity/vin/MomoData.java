@@ -95,7 +95,7 @@ public class MomoData {
     @JsonProperty("middleName")
     private String middleName;
     @JsonProperty("momoLoanId")
-    private Double momoLoanId;
+    private String momoLoanId;
     @JsonProperty("personalId")
     private String personalId;
     @JsonProperty("phoneNumber")
@@ -346,12 +346,12 @@ public class MomoData {
     }
 
     @JsonProperty("momoLoanId")
-    public Double getMomoLoanId() {
+    public String getMomoLoanId() {
         return momoLoanId;
     }
 
     @JsonProperty("momoLoanId")
-    public void setMomoLoanId(Double momoLoanId) {
+    public void setMomoLoanId(String momoLoanId) {
         this.momoLoanId = momoLoanId;
     }
 

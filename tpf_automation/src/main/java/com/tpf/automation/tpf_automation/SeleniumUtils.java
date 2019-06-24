@@ -3,6 +3,7 @@ package com.tpf.automation.tpf_automation;
 import com.tpf.automation.tpf_automation.element.finnone.QuitFPTWait;
 import com.tpf.automation.tpf_automation.entity.FptCustomer;
 import com.tpf.automation.tpf_automation.entity.vin.MomoDTO;
+import com.tpf.automation.tpf_automation.entity.vin.MomoData;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
 import com.tpf.automation.tpf_automation.fpt.FptAutoNew;
 import com.tpf.automation.tpf_automation.restTemplate.AutomationStatusUpdate;
@@ -184,7 +185,7 @@ public class SeleniumUtils {
         return webElement;
     }
 
-    public static void runMomo(MomoDTO momoDTO, String username, String password) {
+    public static void runMomo(MomoData momoDTO, String username, String password) {
         MomoAutomationService momoAutomationService = new MomoAutomationService();
         try {
             momoAutomationService.runAutomation(momoDTO, username, password);
