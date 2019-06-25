@@ -9,13 +9,14 @@ import java.io.File;
 import java.io.IOException;
 
 public class Utils {
-    public static String SCREENSHOT_PRE_PATH = "C:/selenium/finnone_";
+    public static String SCREENSHOT_PRE_PATH = "C:/selenium/momo/finnone_";
+    public static String SCREENSHOT_PRE_PATH_DOCKER = "/images/";
     public static String SCREENSHOT_EXTENSION = ".png";
 
     public static void captureScreenShot(WebDriver driver) {
         File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         try {
-            FileUtils.copyFile(src, new File(SCREENSHOT_PRE_PATH + System.currentTimeMillis() + SCREENSHOT_EXTENSION));
+            FileUtils.copyFile(src, new File(SCREENSHOT_PRE_PATH_DOCKER + System.currentTimeMillis() + SCREENSHOT_EXTENSION));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }

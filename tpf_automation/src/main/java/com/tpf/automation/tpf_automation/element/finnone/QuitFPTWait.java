@@ -20,7 +20,7 @@ public class QuitFPTWait {
         this.driver = driver;
     }
 
-    public QuitFPTWait(WebDriver driver, CustomerErrorResponse customerErrorResponse) {
+    public  QuitFPTWait(WebDriver driver, CustomerErrorResponse customerErrorResponse) {
         this.driver = driver;
         this.customerErrorResponse = customerErrorResponse;
     }

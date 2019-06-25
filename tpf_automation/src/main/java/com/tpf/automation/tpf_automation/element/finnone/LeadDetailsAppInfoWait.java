@@ -2,14 +2,20 @@ package com.tpf.automation.tpf_automation.element.finnone;
 
 import com.tpf.automation.tpf_automation.SeleniumUtils;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
+import lombok.Getter;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 import java.util.Objects;
 
+@Getter
 public class LeadDetailsAppInfoWait {
     WebDriver driver;
     CustomerErrorResponse customerErrorResponse;
@@ -41,8 +47,12 @@ public class LeadDetailsAppInfoWait {
     WebElement btnSavePI;
     WebElement appInfo;
 
+    @FindBy(how = How.ID, using = "emailAddress0")
+    @CacheLookup
+    private WebElement primaryEmailElement;
 
     public LeadDetailsAppInfoWait(WebDriver driver, CustomerErrorResponse customerErrorResponse) {
+        PageFactory.initElements(driver, this);
         this.driver = driver;
         this.customerErrorResponse = customerErrorResponse;
     }

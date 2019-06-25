@@ -56,8 +56,8 @@ public class MomoAutomationService {
 //        driver.get(finnOneUAT);
 
         //register hub
-        //String host = "10.10.10.10";
-        String host = "localhost";
+       // String host = "10.10.10.10";
+       String host = "localhost";
 
         this.browser = "chrome";
         this.os = os;
@@ -315,6 +315,7 @@ public class MomoAutomationService {
         //region COMMUNICATION INFORMATION
         leadDetailsAppInfoWait.getLoadCust_comm("COMMUNICATION INFORMATION", "Load Communication").click();
         leadDetailsAppInfoWait.getBtnPriAdd("COMMUNICATION INFORMATION", "Choose Primary Communication").click();
+        leadDetailsAppInfoWait.getPrimaryEmailElement().sendKeys(momoDTO.getEmail());
         leadDetailsAppInfoWait.getLoadCust_comm("COMMUNICATION INFORMATION", "Load Communication").click();
         //endregion
         System.out.println(username + " COMMUNICATION INFORMATION DONE");
@@ -414,9 +415,15 @@ public class MomoAutomationService {
         String appFormNumber = momoDTO.getMomoLoanId().toString();
         System.out.println("Loan Amount: " + momoDTO.getAmount());
         System.out.println("Tenor : " + momoDTO.getLoanTime());
-        testLeadDetailsAppInfo = Arrays.asList("FPT", "MOMO", appFormNumber, "New Application", "DGL_CASH", "DG01_MOMO TRIAL", momoDTO.getAmount().toString(), momoDTO.getLoanTime().toString(), "OTHER VALUE");
+        testLeadDetailsAppInfo = Arrays.asList("MOMO", "MOMO", appFormNumber, "New Application", "DGL_CASH", "DG01_MOMO TRIAL", momoDTO.getAmount().toString(), momoDTO.getLoanTime().toString(), "OTHER VALUE");
         leadDetailsAppInfoWait.btnLoanDetails("LEAD DETAILS", "LOAN DETAILS");
+        Utils.captureScreenShot(driver);
         LeadDetailsLoanDetailsWait leadDetailsLoanDetailsWait = new LeadDetailsLoanDetailsWait(driver, customerErrorResponse);
+        await("Load loan details - sourcing details tab Timeout!").atMost(30, TimeUnit.SECONDS)
+                .until(() -> leadDetailsLoanDetailsWait.getTabSourcingDetailsElement().getAttribute("class").contains("active"));
+        await("Load loan details - sourcing details container Timeout!").atMost(30, TimeUnit.SECONDS)
+                .until(() -> leadDetailsLoanDetailsWait.getSourcingDetailsDivContainerElement().isDisplayed());
+        Utils.captureScreenShot(driver);
         leadDetailsLoanDetailsWait.inputSourcing("LEAD DETAILS -> LOAN DETAILS", testLeadDetailsAppInfo);
         //endregion
         System.out.println(username + " LEAD DETAILS -> LOAN DETAILS DONE");
@@ -487,6 +494,8 @@ public class MomoAutomationService {
 
         MoveToNextStageFptWait moveToNextStageFptWait = new MoveToNextStageFptWait(driver, customerErrorResponse);
         moveToNextStageFptWait.moveToNextStage(username, "END OF LEAD DETAILS", "MOVE TO NEXT STAGE", customerErrorResponse);
+        Utils.captureScreenShot(driver);
+
         //endregion
 
         //endregion LOAN CREATION

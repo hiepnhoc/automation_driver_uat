@@ -8,10 +8,13 @@ import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
 import com.tpf.automation.tpf_automation.fpt.FptAutoNew;
 import com.tpf.automation.tpf_automation.restTemplate.AutomationStatusUpdate;
 import com.tpf.automation.tpf_automation.services.MomoAutomationService;
+import com.tpf.automation.tpf_automation.utils.Utils;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import javax.rmi.CORBA.Util;
 import java.util.Date;
 
 import java.io.File;
@@ -41,7 +44,8 @@ public class SeleniumUtils {
 
             System.out.println(customerErrorResponse.getField3() + " " + stage + ": " + element + ": " + value + " : " + ex.getMessage());
             // Take screenshot and store as a file format
-            captureScreenshot(driver,customerErrorResponse);
+            //captureScreenshot(driver,customerErrorResponse);
+            Utils.captureScreenShot(driver);
 
             AutomationStatusUpdate.UpdateStatus(customerErrorResponse, driver);
         }
@@ -60,7 +64,8 @@ public class SeleniumUtils {
 
             System.out.println(customerErrorResponse.getField3() + " " + stage + ": " + element + ": " + value + " : " + ex.getMessage());
             // Take screenshot and store as a file format
-            captureScreenshot(driver,customerErrorResponse);
+            //captureScreenshot(driver,customerErrorResponse);
+            Utils.captureScreenShot(driver);
 
             AutomationStatusUpdate.UpdateStatus(customerErrorResponse, driver);
         }
@@ -79,7 +84,8 @@ public class SeleniumUtils {
             customerErrorResponse.setField6("FAILED_" + stage);
             System.out.println(stage + ": " + element + ": " + value + " : " + ex.getMessage());
             // Take screenshot and store as a file format
-            captureScreenshot(driver,customerErrorResponse);
+            //captureScreenshot(driver);
+            Utils.captureScreenShot(driver);
 
             AutomationStatusUpdate.UpdateStatus(customerErrorResponse, driver);
         }
@@ -98,7 +104,8 @@ public class SeleniumUtils {
 
             System.out.println(customerErrorResponse.getField3() + " " + stage + ": " + element + ": " + value + " : " + ex.getMessage());
             // Take screenshot and store as a file format
-            captureScreenshot(driver,customerErrorResponse);
+            //captureScreenshot(driver,customerErrorResponse);
+            Utils.captureScreenShot(driver);
 
             AutomationStatusUpdate.UpdateStatus(customerErrorResponse, driver);
         }
@@ -114,7 +121,8 @@ public class SeleniumUtils {
             //customerErrorResponse.setField6(stage + ": " + element + ": " + value + " : " + ex.getMessage());
             customerErrorResponse.setField6("FAILED_" + stage);
             System.out.println(customerErrorResponse.getField3() + " " + stage + ": " + element + ": " + value + " : " + ex.getMessage());
-            captureScreenshot(driver,customerErrorResponse);
+            //captureScreenshot(driver,customerErrorResponse);
+            Utils.captureScreenShot(driver);
 
             AutomationStatusUpdate.UpdateStatus(customerErrorResponse, driver);
             return false;

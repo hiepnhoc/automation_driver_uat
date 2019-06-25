@@ -30,11 +30,17 @@ public class AutomationConstant {
 //    private static List<String> user4 = Arrays.asList("auto_4","Hcm@12345","false");
 //    private static List<String> user5 = Arrays.asList("auto_5","Hcm@12345","false");
 
+    //private static List<String> user1 = Arrays.asList("momo_auto1","Hcm@12345","false");
+    private static List<String> userMomo2 = Arrays.asList("momo_auto2","Hcm@12345","false");
+    private static List<String> userMomo3 = Arrays.asList("momo_auto3","Hcm@12345","false");
+    private static List<String> userMomo4 = Arrays.asList("momo_auto4","Hcm@12345","false");
+    private static List<String> userMomo5 = Arrays.asList("momo_auto5","Hcm@12345","false");
+
     public static List<FptCustomer> customerQueue = new ArrayList<>();
     public static List<MomoData> customerMomoQueue = new ArrayList<>();
     public static List<List> userIdMomo = new ArrayList<>();
 
-    private static List<String> userMomo1 = Arrays.asList("auto_1","Hcm@12345","false");
+    private static List<String> userMomo1 = Arrays.asList("momo_auto1","Hcm@12345","false");
 
     public static void initUser () {
         userId.add(user1);
@@ -46,10 +52,10 @@ public class AutomationConstant {
 
     public static void initUserMomo () {
         userIdMomo.add(userMomo1);
-//        userId.add(user2);
-//        userId.add(user3);
-//        userId.add(user4);
-//        userId.add(user5);
+        userIdMomo.add(userMomo2);
+        userIdMomo.add(userMomo3);
+        userIdMomo.add(userMomo4);
+        userIdMomo.add(userMomo5);
     }
 
 

@@ -4,6 +4,10 @@ import com.tpf.automation.tpf_automation.SeleniumUtils;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.CacheLookup;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.How;
+import org.openqa.selenium.support.PageFactory;
 
 import java.util.List;
 
@@ -14,12 +18,16 @@ public class LeadDetailsAppDtlWait {
     WebElement occupationType_chzn;
     WebElement Text_employerName; //company tax code
 
+    @FindBy(how = How.ID, using = "Other_loan_purpose_detail_frmAppDtl_0")
+    @CacheLookup
+    private WebElement otherLoanPurposeElement;
 
     public LeadDetailsAppDtlWait(WebDriver driver) {
         this.driver = driver;
     }
 
     public LeadDetailsAppDtlWait(WebDriver driver, CustomerErrorResponse customerErrorResponse) {
+        PageFactory.initElements(driver, this);
         this.driver = driver;
         this.customerErrorResponse = customerErrorResponse;
     }
@@ -31,6 +39,8 @@ public class LeadDetailsAppDtlWait {
 
         SeleniumUtils.findByID(driver,customerErrorResponse,"Loan_purpose_1_frmAppDtl_0_chzn",stage ,"click loan purpose").click();
         SeleniumUtils.findByXpath(driver,customerErrorResponse,"//*[@id='Loan_purpose_1_frmAppDtl_0_chzn']//li[contains(@class, 'active-result') and text() = '" + test.get(0) + "']",stage ,test.get(0)).click();
+
+        otherLoanPurposeElement.sendKeys("vay MOMO");
 
         //SeleniumUtils.findByID(driver,customerErrorResponse,"householdmembers_frmAppDtl_1",stage ,test.get(1)).sendKeys(test.get(1));
         SeleniumUtils.sendKeys(SeleniumUtils.findByID(driver,customerErrorResponse,"householdmembers_frmAppDtl_1",stage ,test.get(1)),
