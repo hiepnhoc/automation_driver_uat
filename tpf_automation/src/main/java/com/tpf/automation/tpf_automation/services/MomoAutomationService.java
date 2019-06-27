@@ -56,8 +56,9 @@ public class MomoAutomationService {
 //        driver.get(finnOneUAT);
 
         //register hub
-       // String host = "10.10.10.10";
-       String host = "localhost";
+        //String host = "10.10.10.10";
+        String host = "localhost";
+        //String host = "172.18.0.2";
 
         this.browser = "chrome";
         this.os = os;
@@ -72,7 +73,7 @@ public class MomoAutomationService {
 //            chromeOptions.addArguments("start-maximized");
             chromeOptions.addArguments("window-size=1800x3000");
 //            chromeOptions.setCapability("platform", platform);
-            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), chromeOptions);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4545/wd/hub"), chromeOptions);
         } else if (browser.equalsIgnoreCase("firefox")) {
             FirefoxOptions firefoxOptions = new FirefoxOptions();
 //            firefoxOptions.setCapability("platform", platform);
@@ -186,12 +187,14 @@ public class MomoAutomationService {
         identification.add(a);
         //identification.add(b);
         //identification.add(c);
-        for (MomoReference momoReference : momoDTO.getReferences()
-        ) {
-            if (momoReference.getRelation().equals("Spouse")) {
-                d = Arrays.asList("Spouse Current National ID", momoReference.getPersonalId(), "", "Vietnam");
-                identification.add(d);
-                break;
+        if (momoDTO.getMaritalStatus().equals("Married")) {
+            for (MomoReference momoReference : momoDTO.getReferences()
+            ) {
+                if (momoReference.getRelation().equals("Spouse")) {
+                    d = Arrays.asList("Spouse Current National ID", momoReference.getPersonalId(), "", "Vietnam");
+                    identification.add(d);
+                    break;
+                }
             }
         }
 
@@ -254,13 +257,13 @@ public class MomoAutomationService {
                 "1", "", "", momoDTO.getPhoneNumber().replace("+84", "0"));
         address.add(b1);
 
-
-        c1 = Arrays.asList("Spouse Address", "Vietnam", "ALL"//fptaddress.getRegion()
-                , momoAddress.getProvince(), momoAddress.getDistrict(),
-                momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "1",
-                "1", "", "", momoDTO.getPhoneNumber().replace("+84", "0"));
-        address.add(c1);
-
+        if (momoDTO.getMaritalStatus().equals("Married")) {
+            c1 = Arrays.asList("Spouse Address", "Vietnam", "ALL"//fptaddress.getRegion()
+                    , momoAddress.getProvince(), momoAddress.getDistrict(),
+                    momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "1",
+                    "1", "", "", momoDTO.getPhoneNumber().replace("+84", "0"));
+            address.add(c1);
+        }
 
         d1 = Arrays.asList("Working Address", "Vietnam", "ALL"//fptaddress.getRegion()
                 , momoAddress.getProvince(), momoAddress.getDistrict(),
@@ -355,8 +358,8 @@ public class MomoAutomationService {
         Utils.captureScreenShot(driver);
 
         //region FINANCE DETAIL
-        List<MomoIncomeDto> incomeDetailDTOList=new ArrayList<>();
-        MomoIncomeDto incomeDetailDTO=MomoIncomeDto.builder().incomeHead("Main Personal Income")
+        List<MomoIncomeDto> incomeDetailDTOList = new ArrayList<>();
+        MomoIncomeDto incomeDetailDTO = MomoIncomeDto.builder().incomeHead("Main Personal Income")
                 .frequency("Monthly")
                 .amount(String.valueOf(momoDTO.getSalary()))
                 .percentage("100").build();
@@ -415,7 +418,15 @@ public class MomoAutomationService {
         String appFormNumber = momoDTO.getMomoLoanId().toString();
         System.out.println("Loan Amount: " + momoDTO.getAmount());
         System.out.println("Tenor : " + momoDTO.getLoanTime());
-        testLeadDetailsAppInfo = Arrays.asList("MOMO", "MOMO", appFormNumber, "New Application", "DGL_CASH", "DG01_MOMO TRIAL", momoDTO.getAmount().toString(), momoDTO.getLoanTime().toString(), "OTHER VALUE");
+
+        //check productcode
+        if (momoDTO.getAmount() == 5000000) {
+            momoDTO.setProductCode("DG02_MOMO ENTRY");
+        } else if (momoDTO.getAmount() == 3000000) {
+            momoDTO.setProductCode("DG01_MOMO TRIAL");
+        }
+
+        testLeadDetailsAppInfo = Arrays.asList("MOMO", "MOMO", appFormNumber, "New Application", "DGL_CASH", momoDTO.getProductCode(), momoDTO.getAmount().toString(), momoDTO.getLoanTime().toString(), "OTHER VALUE");
         leadDetailsAppInfoWait.btnLoanDetails("LEAD DETAILS", "LOAN DETAILS");
         Utils.captureScreenShot(driver);
         LeadDetailsLoanDetailsWait leadDetailsLoanDetailsWait = new LeadDetailsLoanDetailsWait(driver, customerErrorResponse);
@@ -430,8 +441,7 @@ public class MomoAutomationService {
         Utils.captureScreenShot(driver);
 
         //regipn LEAD DETAILS -> VAP
-        if(momoDTO.getInsurrance()==true)
-        {
+        if (momoDTO.getInsurrance() == true) {
             LeadDetailsLoanDetailVapWait loanDetailsVapDetailsTab = new LeadDetailsLoanDetailVapWait(driver);
 
             await("Load loan details - vap details container Timeout!").atMost(30, TimeUnit.SECONDS)
@@ -506,9 +516,9 @@ public class MomoAutomationService {
 
 
         //region FLAG END THREAD
-        for(int i = 0; i< AutomationConstant.userIdMomo.size(); i++) {
-            if(AutomationConstant.userIdMomo.get(i).get(0).equals(username)) {
-                AutomationConstant.userIdMomo.get(i).set(2,"false");
+        for (int i = 0; i < AutomationConstant.userIdMomo.size(); i++) {
+            if (AutomationConstant.userIdMomo.get(i).get(0).equals(username)) {
+                AutomationConstant.userIdMomo.get(i).set(2, "false");
             }
         }
         System.out.println("End thread " + AutomationConstant.userIdMomo);
