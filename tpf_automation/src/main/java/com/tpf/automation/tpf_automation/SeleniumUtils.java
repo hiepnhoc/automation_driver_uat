@@ -15,6 +15,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import javax.rmi.CORBA.Util;
+import java.net.MalformedURLException;
 import java.util.Date;
 
 import java.io.File;
@@ -135,6 +136,8 @@ public class SeleniumUtils {
         try {
             fptAutoNew.FptAutomation(fptCustomer, username, password);
         } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
     }

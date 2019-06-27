@@ -4,40 +4,87 @@ import com.tpf.automation.tpf_automation.AutomationConstant;
 import com.tpf.automation.tpf_automation.element.finnone.*;
 import com.tpf.automation.tpf_automation.entity.*;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
+import com.tpf.automation.tpf_automation.utils.Utils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.tpf.automation.tpf_automation.AutomationConstant.*;
 
 public class FptAutoNew {
-    public void FptAutomation(FptCustomer fptCustomer, String username, String password) throws InterruptedException {
+    private WebDriver driver;
+    private String browser;
+    private String baseUrl;
+    private String os;
+    private String hub;
+
+
+    public void FptAutomation(FptCustomer fptCustomer, String username, String password) throws InterruptedException, MalformedURLException {
 
         FptLoanDetail fptLoanDetail = fptCustomer.getLoanDetail();
         List<FptAddress> fptAddresses = fptCustomer.getAddresses();
         List<FptProductDetail> fptProductDetails = fptCustomer.getProductDetails();
         List<FptReference> fptReferences = fptCustomer.getReferences();
 
-        //region OPEN WEB BROWSER
-        System.setProperty(driverProperty, driverPath);
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("headless");
-
-
-        //options.addArguments("window-size=700x1000");
-        options.addArguments(driverWindowSizeFpt);
-        WebDriver driver = new ChromeDriver(options);
+//        //region OPEN WEB BROWSER
+//        System.setProperty(driverProperty, driverPath);
+//        ChromeOptions options = new ChromeOptions();
+//        options.addArguments("headless");
+//
+//
+//        //options.addArguments("window-size=700x1000");
+//        options.addArguments(driverWindowSizeFpt);
+//        WebDriver driver = new ChromeDriver(options);
         CustomerErrorResponse customerErrorResponse = new CustomerErrorResponse();
         customerErrorResponse.setuserNameRunning(username);
         customerErrorResponse.setField0(fptCustomer.getCustId().trim());
         customerErrorResponse.setField1("UNKNOWN");
         customerErrorResponse.setField3(username);
 
-        driver.get(finnOneUAT);
+
+        String host = "localhost";
+        //String host = "172.18.0.2";
+
+        this.browser = "chrome";
+        this.os = os;
+        this.baseUrl = baseUrl;
+        this.hub = hub;
+
+//        Platform platform = Platform.fromString(os.toUpperCase());
+        if (browser.equalsIgnoreCase("chrome")) {
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.addArguments("headless");
+            chromeOptions.addArguments("--incognito");
+//            chromeOptions.addArguments("start-maximized");
+            chromeOptions.addArguments("window-size=1800x3000");
+//            chromeOptions.setCapability("platform", platform);
+            //this.driver = new RemoteWebDriver(new URL("http://" + host + ":4545/wd/hub"), chromeOptions);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), chromeOptions);
+        } else if (browser.equalsIgnoreCase("firefox")) {
+            FirefoxOptions firefoxOptions = new FirefoxOptions();
+//            firefoxOptions.setCapability("platform", platform);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), firefoxOptions);
+        } else {
+            InternetExplorerOptions ieOption = new InternetExplorerOptions();
+//            ieOption.setCapability("platform", platform);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), ieOption);
+        }
+        this.driver.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+//        this.driver.manage().window().maximize();
+
+//        this.driver.manage().window().setSize(new Dimension(2560, 1440));
+//        this.driver.manage().window().maximize();
+        this.driver.get(finnOneUAT);
 
 
         //driver.manage().window().maximize();
@@ -96,6 +143,7 @@ public class FptAutoNew {
 
         //endregion
         System.out.println(username + " BASIC INFORMATION DONE");
+        Utils.captureScreenShot(driver);
         /**
          * @param List<List> identification
          * @x-size 5 [0-4]
@@ -140,7 +188,7 @@ public class FptAutoNew {
         }
         //endregion
         System.out.println(username + " IDENTIFICATION INFORMATION DONE");
-
+        Utils.captureScreenShot(driver);
         /**
          * @param List<List> address
          * @x-size 14 [0-13]
@@ -209,7 +257,7 @@ public class FptAutoNew {
         leadDetailsAppInfoWait.getExpandAddress("ADDRESS INFORMATION","CLICK TO INPUT ADDRESS").click();
         //endregion
         System.out.println(username + " ADDRESS INFORMATION DONE");
-
+        Utils.captureScreenShot(driver);
         /**
          * @param List<List> family
          * @param String noOfDependents
@@ -244,6 +292,7 @@ public class FptAutoNew {
             //endregion
             System.out.println(username + " FAMILY INFORMATION DONE");
         }
+        Utils.captureScreenShot(driver);
         /**
          * @detail [Choose primary address for communication ]
          * @default: choose "Current Address"
@@ -251,9 +300,11 @@ public class FptAutoNew {
         //region COMMUNICATION INFORMATION
         leadDetailsAppInfoWait.getLoadCust_comm("COMMUNICATION INFORMATION","Load Communication").click();
         leadDetailsAppInfoWait.getBtnPriAdd("COMMUNICATION INFORMATION","Choose Primary Communication").click();
+        Utils.captureScreenShot(driver);
         leadDetailsAppInfoWait.getLoadCust_comm("COMMUNICATION INFORMATION","Load Communication").click();
         //endregion
         System.out.println(username + " COMMUNICATION INFORMATION DONE");
+
         /**
          * @detail [Mandatory: for moving next stage ]
          * @default: No value
