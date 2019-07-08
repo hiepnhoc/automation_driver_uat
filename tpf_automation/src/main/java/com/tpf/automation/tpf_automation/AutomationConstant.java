@@ -51,9 +51,9 @@ public class AutomationConstant {
     }
 
     public static void initUserMomo () {
-        userIdMomo.add(userMomo1);
-        userIdMomo.add(userMomo2);
-        userIdMomo.add(userMomo3);
+        //userIdMomo.add(userMomo1);
+        //userIdMomo.add(userMomo2);
+        //userIdMomo.add(userMomo3);
         userIdMomo.add(userMomo4);
         userIdMomo.add(userMomo5);
     }

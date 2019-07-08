@@ -23,8 +23,8 @@ public class AutomationStatusUpdate {
         System.out.println("Field0:" + customerErrorResponse.getField0().trim());
         System.out.println("Field1:" + customerErrorResponse.getField1().trim());
         System.out.println("Field6:" + customerErrorResponse.getField6().trim());
-        //final String uri = "http://10.1.66.27:9000/api/momo/customers_json/" + "" +
-        final String uri = "http://localhost:9000/api/momo/customers_json/" + "" +
+        final String uri = "http://10.1.66.27:9000/api/momo/customers_json/" + "" +
+        //final String uri = "http://localhost:9000/api/momo/customers_json/" + "" +
         //final String uri = "http://10.131.21.80:9000/api/momo/customers_json/" + "" +
                 customerErrorResponse.getField0().trim() + "/" +
                 customerErrorResponse.getField1().trim() + "/update_automation_result?access_key=access_key_db&automation_result=" + "" +

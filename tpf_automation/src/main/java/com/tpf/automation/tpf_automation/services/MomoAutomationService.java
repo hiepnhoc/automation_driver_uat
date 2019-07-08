@@ -73,7 +73,7 @@ public class MomoAutomationService {
 //            chromeOptions.addArguments("start-maximized");
             chromeOptions.addArguments("window-size=1800x3000");
 //            chromeOptions.setCapability("platform", platform);
-            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4545/wd/hub"), chromeOptions);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), chromeOptions);
         } else if (browser.equalsIgnoreCase("firefox")) {
             FirefoxOptions firefoxOptions = new FirefoxOptions();
 //            firefoxOptions.setCapability("platform", platform);
@@ -247,28 +247,28 @@ public class MomoAutomationService {
         a1 = Arrays.asList(momoAddress.getAddressType(), "Vietnam", "ALL"//fptaddress.getRegion()
                 , momoAddress.getProvince(), momoAddress.getDistrict(),
                 momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "1",
-                "1", "", "", momoDTO.getPhoneNumber().replace("+84", "0"));
+                "1", "", "", momoDTO.getPhoneNumber().replace("+84", ""));
         address.add(a1);
 
 
         b1 = Arrays.asList("Family Book Address", "Vietnam", "ALL"//fptaddress.getRegion()
                 , momoAddress.getProvince(), momoAddress.getDistrict(),
                 momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "1",
-                "1", "", "", momoDTO.getPhoneNumber().replace("+84", "0"));
+                "1", "", "", momoDTO.getPhoneNumber().replace("+84", ""));
         address.add(b1);
 
         if (momoDTO.getMaritalStatus().equals("Married")) {
             c1 = Arrays.asList("Spouse Address", "Vietnam", "ALL"//fptaddress.getRegion()
                     , momoAddress.getProvince(), momoAddress.getDistrict(),
                     momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "1",
-                    "1", "", "", momoDTO.getPhoneNumber().replace("+84", "0"));
+                    "1", "", "", momoDTO.getPhoneNumber().replace("+84", ""));
             address.add(c1);
         }
 
         d1 = Arrays.asList("Working Address", "Vietnam", "ALL"//fptaddress.getRegion()
                 , momoAddress.getProvince(), momoAddress.getDistrict(),
                 momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "1",
-                "1", "", "", momoDTO.getPhoneNumber().replace("+84", "0"));
+                "1", "", "", momoDTO.getPhoneNumber().replace("+84", ""));
         address.add(d1);
 
         leadDetailsAppInfoWait.getExpandAddress("ADDRESS INFORMATION", "CLICK TO INPUT ADDRESS").click();
@@ -442,17 +442,20 @@ public class MomoAutomationService {
 
         //regipn LEAD DETAILS -> VAP
         if (momoDTO.getInsurrance() == true) {
+            MomoInsurance momoInsurance=MomoInsurance.builder()
+                    .vapProduct("INSP01_InsParameter") //set branch default la FPT
+                    .vapTreatment("Financed")
+                    .insuranceCompany("TPF_GIC-Global Insurance Company")
+                    .build();
+
             LeadDetailsLoanDetailVapWait loanDetailsVapDetailsTab = new LeadDetailsLoanDetailVapWait(driver);
 
             await("Load loan details - vap details container Timeout!").atMost(30, TimeUnit.SECONDS)
-                    .until(() -> loanDetailsVapDetailsTab.getTabVapDetailsElement().isDisplayed());
-            Utils.captureScreenShot(driver);
-            loanDetailsVapDetailsTab.getTabVapDetailsElement().click();
-            Utils.captureScreenShot(driver);
+                    .until(() -> loanDetailsVapDetailsTab.getTabVapDetailsElement().getAttribute("class").contains("active"));
+            //loanDetailsVapDetailsTab.getTabVapDetailsElement().click();
             await("Load loan details - sourcing details container Timeout!").atMost(30, TimeUnit.SECONDS)
                     .until(() -> loanDetailsVapDetailsTab.getVapDetailsDivContainerElement().isDisplayed());
-            Utils.captureScreenShot(driver);
-            loanDetailsVapDetailsTab.setData();
+            loanDetailsVapDetailsTab.setData(momoInsurance);
             Utils.captureScreenShot(driver);
             loanDetailsVapDetailsTab.getBtnSaveAndNextElement().click();
         }

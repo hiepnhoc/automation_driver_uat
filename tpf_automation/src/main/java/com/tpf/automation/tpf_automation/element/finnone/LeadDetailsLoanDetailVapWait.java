@@ -1,5 +1,6 @@
 package com.tpf.automation.tpf_automation.element.finnone;
 
+import com.tpf.automation.tpf_automation.entity.vin.MomoInsurance;
 import com.tpf.automation.tpf_automation.utils.Utils;
 import lombok.Getter;
 import org.openqa.selenium.WebDriver;
@@ -62,15 +63,15 @@ public class LeadDetailsLoanDetailVapWait {
         _driver = driver;
     }
 
-    public void setData() {
+    public void setData(MomoInsurance momoInsurance) {
         //vap product
-        await("vapProductElement loading timeout").atMost(30, TimeUnit.SECONDS)
-                .until(() -> vapProductElement.isDisplayed() && vapProductElement.isEnabled());
+//        await("vapProductElement loading timeout").atMost(30, TimeUnit.SECONDS)
+//                .until(() -> vapProductElement.isDisplayed());
         vapProductElement.click();
         await("vapProductOptionElement loading timeout").atMost(30, TimeUnit.SECONDS)
                 .until(() -> vapProductOptionElement.size() > 0);
         for (WebElement element : vapProductOptionElement) {
-            if (element.getText().equals("INSP02_InsParameter")) {
+            if (element.getText().equals(momoInsurance.getVapProduct())) {
                 element.click();
                 break;
             }
@@ -78,13 +79,13 @@ public class LeadDetailsLoanDetailVapWait {
         Utils.captureScreenShot(_driver);
         //vap treatment
         await("vapTreatmentElement loading timeout").atMost(30, TimeUnit.SECONDS)
-                .until(() -> vapTreatmentElement.isDisplayed() && vapTreatmentElement.isEnabled());
+                .until(() -> vapTreatmentElement.isDisplayed());
         vapTreatmentElement.click();
         Utils.captureScreenShot(_driver);
         await("vapTreatmentElementOptionElement loading timeout").atMost(30, TimeUnit.SECONDS)
                 .until(() -> vapTreatmentOptionElement.size() > 0);
         for (WebElement element : vapTreatmentOptionElement) {
-            if (element.getText().equals("Financed")) {
+            if (element.getText().equals(momoInsurance.getVapTreatment())) {
                 element.click();
                 break;
             }
@@ -93,12 +94,12 @@ public class LeadDetailsLoanDetailVapWait {
 
         //insurance company
         await("insuranceCompanyElement loading timeout").atMost(30, TimeUnit.SECONDS)
-                .until(() -> insuranceCompanyElement.isDisplayed() && insuranceCompanyElement.isEnabled());
+                .until(() -> insuranceCompanyElement.isDisplayed());
         insuranceCompanyElement.click();
         await("insuranceCompanyElementOptionElement loading timeout").atMost(30, TimeUnit.SECONDS)
                 .until(() -> insuranceCompanyOptionElement.size() > 0);
         for (WebElement element : insuranceCompanyOptionElement) {
-            if (element.getText().equals("TPF_GIC-Global Insurance Company")) {
+            if (element.getText().equals(momoInsurance.getInsuranceCompany())) {
                 element.click();
                 break;
             }

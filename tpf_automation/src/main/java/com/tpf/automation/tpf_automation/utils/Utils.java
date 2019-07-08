@@ -16,7 +16,7 @@ public class Utils {
     public static void captureScreenShot(WebDriver driver) {
         File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         try {
-            FileUtils.copyFile(src, new File(SCREENSHOT_PRE_PATH_DOCKER + System.currentTimeMillis() + SCREENSHOT_EXTENSION));
+            FileUtils.copyFile(src, new File(SCREENSHOT_PRE_PATH + System.currentTimeMillis() + SCREENSHOT_EXTENSION));
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
