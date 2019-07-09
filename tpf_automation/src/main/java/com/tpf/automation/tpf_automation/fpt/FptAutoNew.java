@@ -3,6 +3,7 @@ package com.tpf.automation.tpf_automation.fpt;
 import com.tpf.automation.tpf_automation.AutomationConstant;
 import com.tpf.automation.tpf_automation.element.finnone.*;
 import com.tpf.automation.tpf_automation.entity.*;
+import com.tpf.automation.tpf_automation.entity.vin.FptIncomeDto;
 import com.tpf.automation.tpf_automation.error.CustomerErrorResponse;
 import com.tpf.automation.tpf_automation.utils.Utils;
 import org.openqa.selenium.WebDriver;
@@ -12,6 +13,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static com.tpf.automation.tpf_automation.AutomationConstant.*;
+import static org.awaitility.Awaitility.await;
 
 public class FptAutoNew {
     private WebDriver driver;
@@ -29,7 +32,7 @@ public class FptAutoNew {
     private String hub;
 
 
-    public void FptAutomation(FptCustomer fptCustomer, String username, String password) throws InterruptedException, MalformedURLException {
+    public void FptAutomation(FptCustomer fptCustomer, String username, String password) throws InterruptedException, IOException {
 
         FptLoanDetail fptLoanDetail = fptCustomer.getLoanDetail();
         List<FptAddress> fptAddresses = fptCustomer.getAddresses();
@@ -339,6 +342,26 @@ public class FptAutoNew {
         //endregion
         System.out.println(username + " EMPLOYMENT DETAILS DONE");
 
+        //region FINANCE DETAIL
+        List<FptIncomeDto> incomeDetailDTOList = new ArrayList<>();
+        FptIncomeDto incomeDetailDTO = FptIncomeDto.builder().incomeHead("Main Personal Income")
+                .frequency("Monthly")
+                .amount(String.valueOf(fptCustomer.getSalary()))
+                .percentage("100").build();
+        incomeDetailDTOList.add(incomeDetailDTO);
+
+        ApplicationInfoFinancialDetailsTab financialDetailsTab = new ApplicationInfoFinancialDetailsTab(driver);
+        financialDetailsTab.openIncomeDetailSection();
+        await("Load financial details - income details Section Timeout!").atMost(30, TimeUnit.SECONDS)
+                .until(() -> financialDetailsTab.getIncomeDetailDivElement().isDisplayed());
+        financialDetailsTab.setIncomeDetailsData(incomeDetailDTOList);
+        Utils.captureScreenShot(driver);
+//        financialDetailsTab.validInOutData(dataControl, applicationInfoValue.get("incomeDetails"));
+        financialDetailsTab.saveAndNext();
+
+        System.out.println(username + " EMPLOYMENT DETAILS : FINANCE DONE");
+        Utils.captureScreenShot(driver);
+
         /**
          * @param List<String> empDetails
          * @size 8 [0-7]
@@ -385,6 +408,21 @@ public class FptAutoNew {
         leadDetailsLoanDetailsWait.inputSourcing("LEAD DETAILS -> LOAN DETAILS",testLeadDetailsAppInfo);
         //endregion
         System.out.println(username + " LEAD DETAILS -> LOAN DETAILS DONE");
+
+        // ==========DOCUMENTS=================
+        DocumentsPage documentsPage = new DocumentsPage(driver);
+        await("Load document tab Timeout!").atMost(30, TimeUnit.SECONDS)
+                .until(() -> documentsPage.getTabDocumentsElement().isDisplayed() && documentsPage.getTabDocumentsElement().isEnabled());
+        documentsPage.getTabDocumentsElement().click();
+        await("Load document container Timeout!").atMost(30, TimeUnit.SECONDS)
+                .until(() -> documentsPage.getDocumentsContainerElement().isDisplayed());
+        documentsPage.getBtnGetDocumentElement().click();
+        await("Load document table Timeout!").atMost(30, TimeUnit.SECONDS)
+                .until(() -> documentsPage.getLendingTrElement().size() > 0);
+//            documentsPage.setData(documentsValue.get("urlPhoto"));
+        documentsPage.setData(fptCustomer.getPhotos());
+        Utils.captureScreenShot(driver);
+        documentsPage.getBtnSubmitElement().click();
 
         /**
          * @param List<String> test_ref

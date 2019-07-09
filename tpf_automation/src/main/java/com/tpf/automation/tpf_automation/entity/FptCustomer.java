@@ -28,10 +28,12 @@ public class FptCustomer {
     private String contactAddress;
     private String dsaCode;
     private String product;
+    private Long salary;
     private FptLoanDetail loanDetail;
     private List<FptReference> references;
     private List<FptAddress> addresses;
     private List<FptProductDetail> productDetails;
+    private List<FptPhoto> photos;
     //endregion
 
     //region CONSTRUCTION
@@ -233,6 +235,22 @@ public class FptCustomer {
 
     public void setProductDetails(List<FptProductDetail> productDetails) {
         this.productDetails = productDetails;
+    }
+
+    public Long getSalary() {
+        return salary;
+    }
+
+    public void setSalary(Long salary) {
+        this.salary = salary;
+    }
+
+    public List<FptPhoto> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<FptPhoto> photos) {
+        this.photos = photos;
     }
     //endregion
 }
