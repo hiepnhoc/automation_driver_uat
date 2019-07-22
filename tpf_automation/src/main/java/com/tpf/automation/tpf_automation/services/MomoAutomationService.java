@@ -73,7 +73,7 @@ public class MomoAutomationService {
 //            chromeOptions.addArguments("start-maximized");
             chromeOptions.addArguments("window-size=1800x3000");
 //            chromeOptions.setCapability("platform", platform);
-            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), chromeOptions);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4545/wd/hub"), chromeOptions);
         } else if (browser.equalsIgnoreCase("firefox")) {
             FirefoxOptions firefoxOptions = new FirefoxOptions();
 //            firefoxOptions.setCapability("platform", platform);
@@ -498,8 +498,8 @@ public class MomoAutomationService {
          */
         //region LEAD DETAILS -> MISC - FRMPDAPTL
         List<String> test_dtl = new ArrayList<>();
-        test_dtl = Arrays.asList("Education, sports", "0", "0", "Rented", "2222222222222220", "FPT000001", "62");
-        test_dtl = Arrays.asList("Education, sports", "0", "0", "Rented", "2222222222222220", "DS0001100", "62");
+        test_dtl = Arrays.asList("Education, sports", "0", "0", "Rented", "2222222222222222", "FPT000001", "62");
+        test_dtl = Arrays.asList("Education, sports", "0", "0", "Rented", "2222222222222222", "DS0001100", "62");
         leadDetailsAppInfoWait.btnMiscAppDtl("LEAD DETAILS", "MISC - FRMAPPDTL");
         LeadDetailsAppDtlWait leadDetailsAppDtlWait = new LeadDetailsAppDtlWait(driver, customerErrorResponse);
         leadDetailsAppDtlWait.inputFrmAppDtl("LEAD DETAILS -> MISC - FRMAPPDTL", test_dtl);
@@ -510,6 +510,7 @@ public class MomoAutomationService {
         Utils.captureScreenShot(driver);
 
         //endregion
+
 
         //endregion LOAN CREATION
 
