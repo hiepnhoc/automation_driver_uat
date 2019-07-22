@@ -56,10 +56,16 @@ public class QuitFPTWait {
         //driver.close();
         driver.quit();
         System.out.println("Quit");
-        if(AutomationConstant.customerMomoQueue.size() >= 1) {
-            MomoController momoController = new MomoController();
-            momoController.addData(AutomationConstant.customerMomoQueue.get(0));
-            AutomationConstant.customerMomoQueue.remove(0);
+//        if(AutomationConstant.customerMomoQueue.size() >= 1) {
+//            MomoController momoController = new MomoController();
+//            momoController.addData(AutomationConstant.customerMomoQueue.get(0));
+//            AutomationConstant.customerMomoQueue.remove(0);
+//        }
+
+        if(AutomationConstant.customerQueue.size() >= 1) {
+            FptController fptController = new FptController();
+            fptController.addData(AutomationConstant.customerQueue.get(0));
+            AutomationConstant.customerQueue.remove(0);
         }
     }
 
