@@ -72,7 +72,7 @@ public class FptAutoNew {
             chromeOptions.addArguments("window-size=1800x3000");
 //            chromeOptions.setCapability("platform", platform);
             //this.driver = new RemoteWebDriver(new URL("http://" + host + ":4545/wd/hub"), chromeOptions);
-            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4444/wd/hub"), chromeOptions);
+            this.driver = new RemoteWebDriver(new URL("http://" + host + ":4545/wd/hub"), chromeOptions);
         } else if (browser.equalsIgnoreCase("firefox")) {
             FirefoxOptions firefoxOptions = new FirefoxOptions();
 //            firefoxOptions.setCapability("platform", platform);

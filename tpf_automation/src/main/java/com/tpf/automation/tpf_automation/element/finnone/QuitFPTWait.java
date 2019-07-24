@@ -47,9 +47,9 @@ public class QuitFPTWait {
         }
 
         //SeleniumUtils.findByID(driver,customerErrorResponse,"redirectToLoginButton",stage ,value);
-        for(int i = 0; i< AutomationConstant.userIdMomo.size(); i++) {
-            if(AutomationConstant.userIdMomo.get(i).get(0).equals(customerErrorResponse.getuserNameRunning())) {
-                AutomationConstant.userIdMomo.get(i).set(2,"false");
+        for(int i = 0; i< AutomationConstant.userId.size(); i++) {
+            if(AutomationConstant.userId.get(i).get(0).equals(customerErrorResponse.getuserNameRunning())) {
+                AutomationConstant.userId.get(i).set(2,"false");
             }
         }
         System.out.println("End thread " + customerErrorResponse.getuserNameRunning());
