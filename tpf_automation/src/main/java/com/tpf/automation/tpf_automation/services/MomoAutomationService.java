@@ -253,22 +253,22 @@ public class MomoAutomationService {
 
         b1 = Arrays.asList("Family Book Address", "Vietnam", "ALL"//fptaddress.getRegion()
                 , momoAddress.getProvince(), momoAddress.getDistrict(),
-                momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "1",
-                "1", "", "", momoDTO.getPhoneNumber().replace("+84", ""));
+                momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "",
+                "", "", "", "");
         address.add(b1);
 
         if (momoDTO.getMaritalStatus().equals("Married")) {
             c1 = Arrays.asList("Spouse Address", "Vietnam", "ALL"//fptaddress.getRegion()
                     , momoAddress.getProvince(), momoAddress.getDistrict(),
-                    momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "1",
-                    "1", "", "", momoDTO.getPhoneNumber().replace("+84", ""));
+                    momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "",
+                    "", "", "", "");
             address.add(c1);
         }
 
         d1 = Arrays.asList("Working Address", "Vietnam", "ALL"//fptaddress.getRegion()
                 , momoAddress.getProvince(), momoAddress.getDistrict(),
-                momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "1",
-                "1", "", "", momoDTO.getPhoneNumber().replace("+84", ""));
+                momoAddress.getAddress1(), momoAddress.getAddress2(), momoAddress.getWard(), "", "",
+                "", "", "","");
         address.add(d1);
 
         leadDetailsAppInfoWait.getExpandAddress("ADDRESS INFORMATION", "CLICK TO INPUT ADDRESS").click();
@@ -420,9 +420,9 @@ public class MomoAutomationService {
         System.out.println("Tenor : " + momoDTO.getLoanTime());
 
         //check productcode
-        if (momoDTO.getAmount() == 5000000) {
+        if (momoDTO.getProductCode().equals("DG02")) {
             momoDTO.setProductCode("DG02_MOMO ENTRY");
-        } else if (momoDTO.getAmount() == 3000000) {
+        } else if (momoDTO.getProductCode().equals("DG01")) {
             momoDTO.setProductCode("DG01_MOMO TRIAL");
         }
 
