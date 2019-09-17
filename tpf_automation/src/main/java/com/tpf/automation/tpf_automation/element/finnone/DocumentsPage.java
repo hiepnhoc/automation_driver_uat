@@ -114,7 +114,7 @@ public class DocumentsPage {
 
     }
 
-    public void setData(List<FptPhoto> photoList) throws IOException {
+    public void setData(List<FptPhoto> photoList,String custID) throws IOException {
 
         //dang ki local file
         ((RemoteWebDriver) _driver).setFileDetector(new LocalFileDetector());
@@ -131,8 +131,11 @@ public class DocumentsPage {
 
         for (FptPhoto f : photoList) {
             if(f.getDocumentType().equals("selfie")){
-                String fromFile = f.getLink();
-                String toFile = Utils.SCREENSHOT_PRE_PATH + "selfie.png" ;
+                String fromFile = f.getLink().replace("https://calllogoutsidebeta.fptshop.com.vn","https://outsidepaymenttest.tpb.vn/fpttpbank");
+                String toFile = Utils.SCREENSHOT_PRE_PATH_DOCKER + "/" +  custID + "_selfie.png" ;
+                System.out.println("FromFile:" + fromFile);
+                System.out.println("ToFile:" + fromFile);
+
                 FileUtils.copyURLToFile(new URL(fromFile), new File(toFile), 10000, 10000);
                 File file =new File(toFile);
                 fileSelfie=file.getAbsolutePath();
@@ -140,19 +143,21 @@ public class DocumentsPage {
                 System.out.println("Exist fileSelfie:" + file.getAbsolutePath());
             }
 
-//            if(f.getDocumentType().equals("employeecard")){
-//                String fromFile = f.getLink();
-//                String toFile = Utils.SCREENSHOT_PRE_PATH + "employeecard.png" ;
-//                FileUtils.copyURLToFile(new URL(fromFile), new File(toFile), 10000, 10000);
-//                File file =new File(toFile);
-//                fileEmployeeCard=file.getAbsolutePath();
-//                System.out.println("Exist fileEmployeeCard:" + file.exists());
-//                System.out.println("Exist fileEmployeeCard:" + file.getAbsolutePath());
-//            }
+            if(f.getDocumentType().equals("employeecard")){
+                String fromFile = f.getLink().replace("https://calllogoutsidebeta.fptshop.com.vn","https://outsidepaymenttest.tpb.vn/fpttpbank");
+                String toFile = Utils.SCREENSHOT_PRE_PATH_DOCKER + "/" +  custID + "_employeecard.png" ;
+                FileUtils.copyURLToFile(new URL(fromFile), new File(toFile), 10000, 10000);
+                File file =new File(toFile);
+                fileEmployeeCard=file.getAbsolutePath();
+                System.out.println("Exist fileEmployeeCard:" + file.exists());
+                System.out.println("Exist fileEmployeeCard:" + file.getAbsolutePath());
+            }
 
-            if(f.getDocumentType().equals("selfie")){
-                String fromFile = f.getLink();
-                String toFile = Utils.SCREENSHOT_PRE_PATH + "National_ID.png" ;
+            if(f.getDocumentType().equals("National_ID" +
+                    "" +
+                    "")){
+                String fromFile = f.getLink().replace("https://calllogoutsidebeta.fptshop.com.vn","https://outsidepaymenttest.tpb.vn/fpttpbank");
+                String toFile = Utils.SCREENSHOT_PRE_PATH_DOCKER + "/" +  custID + "_National_ID.png" ;
                 FileUtils.copyURLToFile(new URL(fromFile), new File(toFile), 10000, 10000);
                 File file =new File(toFile);
                 fileID=file.getAbsolutePath();
@@ -187,7 +192,7 @@ public class DocumentsPage {
 
                 if(element.getAttribute("data-documentcode").equals("TPF_Employee_Card"))
                 {
-                    lendingPhotoElement.get(_tempIndex).sendKeys(fileSelfie);
+                    lendingPhotoElement.get(_tempIndex).sendKeys(fileEmployeeCard);
                 }
 
                 Utils.captureScreenShot(_driver);

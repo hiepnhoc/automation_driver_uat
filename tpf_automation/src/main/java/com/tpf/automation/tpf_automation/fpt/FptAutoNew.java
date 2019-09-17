@@ -383,7 +383,7 @@ public class FptAutoNew {
         }
         leadDetailsAppInfoWait.btnMiscFpt("LEAD DETAILS", "MISC-FPT");
         LeadDetailsMiscFptWait leadDetailsMiscFptWait = new LeadDetailsMiscFptWait(driver,customerErrorResponse);
-        leadDetailsMiscFptWait.inputFPT("LEAD DETAILS -> MISC-FPT",inputProducts,"0",fptLoanDetail.getDownPayment(),fptCustomer.getEmployeeCard());
+        leadDetailsMiscFptWait.inputFPT("LEAD DETAILS -> MISC-FPT",inputProducts,fptLoanDetail.getDownPayment(),"0",fptCustomer.getEmployeeCard());
         //endregion
         System.out.println(username + " LEAD DETAILS -> MISC-FPT DONE");
 
@@ -409,21 +409,25 @@ public class FptAutoNew {
         //endregion
         System.out.println(username + " LEAD DETAILS -> LOAN DETAILS DONE");
 
-        // ==========DOCUMENTS=================
-        DocumentsPage documentsPage = new DocumentsPage(driver);
-        await("Load document tab Timeout!").atMost(30, TimeUnit.SECONDS)
-                .until(() -> documentsPage.getTabDocumentsElement().isDisplayed() && documentsPage.getTabDocumentsElement().isEnabled());
-        documentsPage.getTabDocumentsElement().click();
-        await("Load document container Timeout!").atMost(30, TimeUnit.SECONDS)
-                .until(() -> documentsPage.getDocumentsContainerElement().isDisplayed());
-        documentsPage.getBtnGetDocumentElement().click();
-        await("Load document table Timeout!").atMost(30, TimeUnit.SECONDS)
-                .until(() -> documentsPage.getLendingTrElement().size() > 0);
+        try {
+            // ==========DOCUMENTS=================
+            DocumentsPage documentsPage = new DocumentsPage(driver);
+            await("Load document tab Timeout!").atMost(30, TimeUnit.SECONDS)
+                    .until(() -> documentsPage.getTabDocumentsElement().isDisplayed() && documentsPage.getTabDocumentsElement().isEnabled());
+            documentsPage.getTabDocumentsElement().click();
+            await("Load document container Timeout!").atMost(30, TimeUnit.SECONDS)
+                    .until(() -> documentsPage.getDocumentsContainerElement().isDisplayed());
+            documentsPage.getBtnGetDocumentElement().click();
+            await("Load document table Timeout!").atMost(30, TimeUnit.SECONDS)
+                    .until(() -> documentsPage.getLendingTrElement().size() > 0);
 //            documentsPage.setData(documentsValue.get("urlPhoto"));
-        documentsPage.setData(fptCustomer.getPhotos());
-        Utils.captureScreenShot(driver);
-        documentsPage.getBtnSubmitElement().click();
-
+            documentsPage.setData(fptCustomer.getPhotos(),fptCustomer.getCustId().trim());
+            Utils.captureScreenShot(driver);
+            documentsPage.getBtnSubmitElement().click();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         /**
          * @param List<String> test_ref
          * @size 3 [0-2]
